@@ -35,7 +35,7 @@ On tablet & phone screen (<1024px):
 
 ### Github's search API sometimes returns duplicate pagination data
 
-Even though I set the search's `start` param to be the `endCursor` of previous search, sometimes the new search still returns the last item of previous one. I'm afraid this is Github's fault, but I'm not sure. Correct me if I'm wrong.
+Even though I set the search's `after` param to be the `endCursor` of previous search, sometimes the new search still returns the last item of previous one. I'm afraid this is Github's fault, but I'm not sure. Correct me if I'm wrong.
 
 ### You can't jump directly to every page
 
