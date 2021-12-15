@@ -3,7 +3,7 @@ import { Row, Skeleton, Tag } from 'components';
 
 const { Rectangle, Round } = Skeleton;
 
-export function UserInfo({
+export default function UserInfo({
   avatarUrl,
   name,
   login,

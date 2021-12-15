@@ -24,7 +24,7 @@ function MoreIcon() {
 export default function Pagination({
   size = 5,
   total,
-  current = 7,
+  current = 1,
   onChange = (page) => {},
   className,
   ...rest
@@ -45,7 +45,7 @@ export default function Pagination({
       <Button
         size="sm"
         disabled={current < 2}
-        onClick={() => onChange(current - 1, pages)}
+        onClick={() => onChange(current - 1)}
       >
         <i className="bi bi-chevron-left" />
       </Button>
@@ -85,7 +85,7 @@ export default function Pagination({
       <Button
         size="sm"
         disabled={current >= pages}
-        onClick={() => onChange(current + 1, pages)}
+        onClick={() => onChange(current + 1)}
       >
         <i className="bi bi-chevron-right" />
       </Button>

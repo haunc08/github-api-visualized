@@ -1,10 +1,10 @@
 import { Nav } from 'components';
-import UserSearchBar from './UserSearchBar';
+import SearchUserBar from './SearchUserBar';
 
 export default function AppNav() {
   return (
     <Nav className="justify-center">
-      <UserSearchBar />
+      <SearchUserBar />
     </Nav>
   );
 }

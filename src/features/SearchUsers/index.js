@@ -1,97 +1,132 @@
-import { Container, Main, Lists, Page } from 'components';
-import { InMemoryCache, useLazyQuery } from '@apollo/client';
-import { UserInfo } from './UserInfo';
-import { RepositoryInfo } from './RepositoryInfo';
+import { Lists, Page } from 'components';
+import { useLazyQuery } from '@apollo/client';
+import UserInfo from './UserInfo';
+import RepositoryInfo from './RepositoryInfo';
 import { GET_USER_REPOS, SEARCH_USER } from './queries';
 import { useSearchParams } from 'react-router-dom';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const { InfiniteList, PaginationList } = Lists;
 
+const searchLimit = 5;
+const reposLimit = 5;
+const githubPaginationLimit = 100;
+
 export default function SearchUsers() {
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState({});
-  const userCount = useRef(0);
-
   const [searchParams] = useSearchParams();
-
+  const [users, setUsers] = useState([]);
+  const [userCount, setUserCount] = useState(0);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [repos, setRepos] = useState([]);
+  const [reposCurrentPage, setReposCurrentPage] = useState(1);
   const [
     searchUsers,
-    { loading: searchLoading, error: searchError, data: searchResult },
+    { loading: searchLoading, error: searchError, data: fetchedSearchResult },
   ] = useLazyQuery(SEARCH_USER);
   const [
     getUserRepos,
-    { loading: getUserReposLoading, error: getUserReposError, data: userRepos },
+    {
+      loading: getUserReposLoading,
+      error: getUserReposError,
+      data: fetchedRepos,
+    },
   ] = useLazyQuery(GET_USER_REPOS);
 
-  const searchQuery = searchParams.get('q');
+  const fetchedPages = useRef(0);
 
-  useEffect(() => {
-    if (searchResult) {
-      setUsers((prev) => prev.concat(searchResult?.search.edges));
-      userCount.current = searchResult?.search.userCount;
-    }
-  }, [searchResult]);
+  const searchQuery = searchParams.get('q');
 
   useEffect(() => {
     if (searchQuery) {
       searchUsers({
         variables: {
           searchQuery,
-        },
-        onCompleted: () => {
-          setUsers([]);
-          setSelectedUser({});
+          first: searchLimit,
         },
       });
+      setUsers([]);
+      fetchedPages.current = 0;
     }
-  }, [searchQuery, searchUsers]);
+  }, [searchQuery, searchUsers, setUsers]);
+
+  useEffect(() => {
+    if (fetchedSearchResult) {
+      setUsers((prev) => prev.concat(fetchedSearchResult.search.nodes));
+      setUserCount(fetchedSearchResult.search.userCount);
+    }
+  }, [fetchedSearchResult, setUsers]);
 
   const searchNextUsers = () => {
-    if (
-      searchResult?.search.pageInfo.hasNextPage &&
-      searchResult?.search.pageInfo.endCursor
-    ) {
+    const hasNextPage = fetchedSearchResult?.search.pageInfo;
+    const endCursor = fetchedSearchResult?.search.pageInfo.endCursor;
+    if (hasNextPage && endCursor) {
       searchUsers({
         variables: {
           searchQuery,
-          after: searchResult?.search.pageInfo.endCursor,
+          first: searchLimit,
+          after: endCursor,
         },
       });
     }
   };
 
-  const handleSelectUser = (e, item) => {
-    setSelectedUser({
-      ...item.node,
-      reposCount: item.node.repositories.totalCount,
-    });
-    getUserRepos({ variables: { login: selectedUser.login } });
+  const handleSelectUser = (key, item) => {
+    if (item.login) {
+      getUserRepos({ variables: { login: item.login, first: reposLimit } });
+      setSelectedUser({
+        login: item.login,
+        name: item.name,
+        reposCount: item?.repositories?.totalCount,
+      });
+      setRepos([]);
+      setReposCurrentPage(1);
+      fetchedPages.current = 1;
+    }
+  };
+
+  useEffect(() => {
+    if (fetchedRepos) {
+      setRepos((prev) => prev.concat(fetchedRepos.user.repositories.nodes));
+    }
+  }, [fetchedRepos]);
+
+  const handleChangeReposPage = (page) => {
+    if (fetchedPages.current < page) {
+      getUserRepos({
+        variables: {
+          login: selectedUser.login,
+          first: (page - reposCurrentPage) * reposLimit,
+          after: fetchedRepos.user.repositories.pageInfo.endCursor,
+        },
+      });
+      fetchedPages.current = page;
+    }
+    setReposCurrentPage(page);
   };
 
   return (
     <Page className="flex flex-col gap-6 lg:flex-row">
       <InfiniteList
-        loading={searchLoading}
         containerClassName="flex overflow-hidden lg:flex-1 lg:max-h-content-h lg:max-w-md "
         className="overflow-auto flex lg:block"
-        header={`Users (${userCount.current})`}
+        header={`Users (${userCount})`}
         data={users}
-        keyField="node.login"
-        onClick={handleSelectUser}
+        keyField="login"
+        loading={searchLoading}
         selectable
-        renderItem={({ node }, index, selected) => (
+        onSelect={handleSelectUser}
+        renderItem={(item, index, selected) => (
           <UserInfo
             selected={selected}
-            avatarUrl={node.avatarUrl}
-            name={node.name}
-            login={node.login}
-            reposCount={node.repositories?.totalCount}
+            avatarUrl={item.avatarUrl}
+            name={item.name}
+            login={item.login}
+            reposCount={item.repositories?.totalCount}
           />
         )}
+        onBottomReached={searchNextUsers}
         loadingComponent={<UserInfo loading />}
         loadingItemCount={3}
-        onBottomReached={() => searchNextUsers()}
       />
       {!!selectedUser.login && (
         <PaginationList
@@ -100,8 +135,12 @@ export default function SearchUsers() {
           header={`${selectedUser.name}'s repositories (${
             selectedUser.reposCount || 0
           })`}
-          data={userRepos?.user.repositories.nodes}
-          onClick={() => {}}
+          data={repos}
+          keyField="name"
+          loading={getUserReposLoading}
+          pageSize={5}
+          currentPage={reposCurrentPage}
+          onPageChange={handleChangeReposPage}
           renderItem={(item, index) => (
             <RepositoryInfo
               name={item.name}
@@ -110,6 +149,9 @@ export default function SearchUsers() {
               watching={item.watchers.totalCount}
             />
           )}
+          loadingComponent={<RepositoryInfo loading />}
+          loadingItemCount={5}
+          total={selectedUser.reposCount}
         />
       )}
     </Page>

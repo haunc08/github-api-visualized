@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Input, Row } from 'components';
 
-export default function UserSearchBar(props) {
+export default function SearchUserBar(props) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const searchInputRef = useRef(null);
@@ -11,6 +11,7 @@ export default function UserSearchBar(props) {
     e.preventDefault();
     const searchValue = e.target.search.value.trim();
     if (!searchValue) return;
+    // setUsers([]);
     navigate(`search?q=${searchValue}`);
   }
 

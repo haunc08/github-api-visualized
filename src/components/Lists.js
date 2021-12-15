@@ -38,17 +38,19 @@ function BasicList({
   loading,
   loadingComponent = <Loading />,
   loadingItemCount = 1,
-  onClick,
-  selectable,
   clickable,
+  onClick = (event, item) => {},
+  selectable,
+  onSelect = (key) => {},
 }) {
   const [selectedKey, setSelectedKey] = useState(null);
 
   function handleClickItem(e, key, item) {
-    if (selectable) {
+    if (selectable && key !== selectedKey) {
       setSelectedKey(key);
+      onSelect(key, item);
     }
-    if (typeof onClick === 'function') onClick(e, item);
+    onClick(e, item);
   }
 
   return (
@@ -124,11 +126,28 @@ function InfiniteList({
   );
 }
 
-function PaginationList({ containerClassName, ...basicListProps }) {
+function PaginationList({
+  data = [],
+  total,
+  pageSize,
+  onPageChange,
+  currentPage,
+  containerClassName,
+  ...basicListProps
+}) {
   return (
     <div className={classNames('flex flex-col gap-6', containerClassName)}>
-      <BasicList {...basicListProps} />
-      <Pagination className="self-center" total={50} />
+      <BasicList
+        data={data.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
+        {...basicListProps}
+      />
+      <Pagination
+        className="self-center"
+        current={currentPage}
+        total={total}
+        size={pageSize}
+        onChange={onPageChange}
+      />
     </div>
   );
 }
