@@ -1,4 +1,4 @@
-import { Container, Heading, Main, Page } from 'components';
+import { Heading, Page } from 'components';
 
 export default function Home() {
   return (

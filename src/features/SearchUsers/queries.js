@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const SEARCH_USER = gql`
-  query SearchUser($searchQuery: String!, $first: Int, $after: String) {
+  query SearchUser($searchQuery: String!, $first: Int!, $after: String) {
     search(type: USER, query: $searchQuery, first: $first, after: $after) {
       pageInfo {
         endCursor
@@ -23,7 +23,7 @@ export const SEARCH_USER = gql`
 `;
 
 export const GET_USER_REPOS = gql`
-  query GetUserRepos($login: String!, $first: Int, $after: String) {
+  query GetUserRepos($login: String!, $first: Int!, $after: String) {
     user(login: $login) {
       repositories(first: $first, after: $after) {
         pageInfo {

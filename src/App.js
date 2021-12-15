@@ -1,6 +1,5 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Layout, Repository, SearchUsers } from 'features';
-import Home from 'features/Home';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Layout, Repository, SearchUsers, Home } from 'features';
 
 function App() {
   return (
@@ -9,7 +8,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="search" element={<SearchUsers />} />
-          <Route path="repo" element={<Repository />} />
+          <Route path="repository/:owner/:name" element={<Repository />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>
     </BrowserRouter>

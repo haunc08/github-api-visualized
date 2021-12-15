@@ -39,7 +39,7 @@ export default function Pagination({
 
   return (
     <Row
-      className={classNames('gap-2 items-stretch flex-wrap', className)}
+      className={classNames('gap-2 items-stretch flex-wrap p-2', className)}
       {...rest}
     >
       <Button
@@ -68,7 +68,7 @@ export default function Pagination({
       ).map((number) => (
         <NumberButton
           key={number}
-          selected={current === number}
+          selected={Number(current) === Number(number)}
           onChange={onChange}
         >
           {number}

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Row, Skeleton, Tag } from 'components';
+import { Skeleton, Tag } from 'components';
 
 const { Rectangle, Round } = Skeleton;
 

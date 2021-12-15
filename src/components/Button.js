@@ -22,7 +22,7 @@ export default function Button({
           'py-2 px-4': size === 'md',
           'py-1 px-2 min-w-[2.25rem]': size === 'sm',
         },
-        `rounded font-semibold transition-all select-none
+        `rounded-lg font-medium transition-all select-none shadow-sm
          focus:outline-none focus:ring`,
         className
       )}

@@ -11,7 +11,6 @@ export default function SearchUserBar(props) {
     e.preventDefault();
     const searchValue = e.target.search.value.trim();
     if (!searchValue) return;
-    // setUsers([]);
     navigate(`search?q=${searchValue}`);
   }
 
