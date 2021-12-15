@@ -18,10 +18,6 @@ To install the packages.
 
 To run the app.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ## Notes
 
@@ -30,9 +26,11 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 As I see larger screens will get benefit from two columns layout and not every mouse users love horizontal scrolling, the search page will no have two layouts:
 
 On laptop screen (>1204px):
+
 ![image](https://user-images.githubusercontent.com/94792870/146190153-bfef6152-ab1b-4192-86ad-c3d260291704.png)
 
 On tablet & phone screen (<1024px):
+
 ![image](https://user-images.githubusercontent.com/94792870/146190359-8cfc489f-b90d-4ea9-b15a-23ffb7b4af7e.png)
 
 ### Github's search API sometimes returns duplicate pagination data
