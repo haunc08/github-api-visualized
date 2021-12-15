@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# A React front-end assessment
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Tech stack: React, Apollo Client, GraphQL, Tailwind CSS. 
 
-## Available Scripts
+## Installation
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+To install the packages. While you're waiting, how about...
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Config your Github personal access token in .env file
+
+`REACT_APP_GITHUB_PAT=`
+
+### `yarn start`
+
+To run the app.
 
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+## Notes
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### There are two layouts for the search page
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+As I see larger screens will get benefit from two columns layout and not every mouse users love horizontal scrolling, the search page will no have two layouts:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+On laptop screen (>1204px):
+![image](https://user-images.githubusercontent.com/94792870/146190153-bfef6152-ab1b-4192-86ad-c3d260291704.png)
 
-### `npm run eject`
+On tablet & phone screen (<1024px):
+![image](https://user-images.githubusercontent.com/94792870/146190359-8cfc489f-b90d-4ea9-b15a-23ffb7b4af7e.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Github's search API sometimes returns duplicate pagination data
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Even though I set the search's `start` param to be the `endCursor` of previous search, sometimes the new search still returns the last item of previous one. I'm afraid this is Github's fault, but I'm not sure. Correct me if I'm wrong.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### You can't jump directly to every page
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Github API v4 doesn't support a mechanism for offset pagination, while also limits to 100 records per request. Therefore I limited the steps you can jump for the simplicity of this project.
+https://github.community/t/graphql-api-offset-pagination/14412
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
