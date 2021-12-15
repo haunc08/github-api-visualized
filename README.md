@@ -4,11 +4,11 @@ Tech stack: React, Apollo Client, GraphQL, Tailwind CSS.
 
 ## Installation
 
-In the project directory, you can run:
+In the project directory, you can:
 
 ### `yarn`
 
-To install the packages. While you're waiting, how about...
+To install the packages.
 
 ### Config your Github personal access token in .env file
 
